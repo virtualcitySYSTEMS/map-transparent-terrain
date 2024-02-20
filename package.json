@@ -1,0 +1,63 @@
+{
+  "name": "@vcmap/hello-world",
+  "version": "1.0.9",
+  "description": "A small hello world plugin",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "vcmplugin build",
+    "pack": "vcmplugin pack",
+    "start": "vcmplugin serve",
+    "preview": "vcmplugin preview",
+    "buildStagingApp": "vcmplugin buildStagingApp",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint:js": "eslint . --ext .vue,.js,.cjs,.mjs,.ts,.cts,.mts",
+    "lint:prettier": "prettier --check .",
+    "lint": "npm run lint:js && npm run lint:prettier",
+    "format": "prettier --write --list-different . && npm run lint:js -- --fix"
+  },
+  "devDependencies": {
+    "@vcmap/plugin-cli": "^2.1.9",
+    "@vcsuite/eslint-config": "^3.0.3",
+    "@vitest/coverage-c8": "^0.31.1",
+    "jest-canvas-mock": "^2.4.0",
+    "jsdom": "^21.1.2",
+    "resize-observer-polyfill": "1.5.1",
+    "vitest": "^0.31.0"
+  },
+  "peerDependencies": {
+    "@vcmap/core": "^5.0.0-rc.35",
+    "@vcmap/ui": "^5.0.0-rc.25",
+    "vue": "~2.7.3",
+    "vuetify": "~2.6.7"
+  },
+  "keywords": [
+    "vcmap",
+    "plugin"
+  ],
+  "files": [
+    "plugin-assets",
+    "src/",
+    "dist/",
+    "tests/",
+    "LICENSE.md",
+    "README.md",
+    "config.json",
+    "vitest.config.js"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./dist": "./dist/index.js"
+  },
+  "eslintIgnore": [
+    "node_modules"
+  ],
+  "eslintConfig": {
+    "root": true,
+    "extends": "@vcsuite/eslint-config/vue"
+  },
+  "prettier": "@vcsuite/eslint-config/prettier.js",
+  "author": "Ben Kuster <bkuster@vc.systems>",
+  "license": "MIT"
+}
