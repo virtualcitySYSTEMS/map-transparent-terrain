@@ -1,0 +1,168 @@
+<template>
+  <v-sheet class="hide-scrollbar">
+    <v-row no-gutters class="py-0 px-1">
+      <VcsCheckbox
+        v-model="moveCameraUnderTerrain"
+        :label="$t('transparentTerrain.settings.global.camera')"
+      />
+    </v-row>
+    <v-row no-gutters class="py-0 px-1">
+      <v-col>
+        <VcsLabel>
+          {{ $t('transparentTerrain.settings.global.opacity') }}
+        </VcsLabel>
+      </v-col>
+      <v-col class="d-flex justify-end">
+        <VcsLabel>
+          {{ opacity }}
+        </VcsLabel>
+      </v-col>
+    </v-row>
+    <v-row no-gutters class="py-0 px-1">
+      <vcs-slider
+        id="sliderInput"
+        type="number"
+        :dense="false"
+        step="1"
+        v-model.number="opacity"
+        :disabled="useOpacityByDistance"
+      />
+    </v-row>
+    <VcsFormSection
+      :expandable="true"
+      heading="transparentTerrain.settings.global.nearFar"
+    >
+      <v-row no-gutters class="py-0 px-1">
+        <v-switch
+          v-model="useOpacityByDistance"
+          :label="$t('transparentTerrain.settings.global.distanceOpacity')"
+        />
+      </v-row>
+      <v-row no-gutters class="py-0 px-1">
+        <v-col>
+          <VcsLabel>
+            {{ $t('transparentTerrain.settings.global.near') }}
+          </VcsLabel>
+        </v-col>
+        <v-col class="d-flex justify-end">
+          <VcsTextField
+            id="distanceNear"
+            type="number"
+            :disabled="!useOpacityByDistance"
+            v-model.number="opacityByDistance.near"
+          />
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-1">
+        <v-col>
+          <VcsLabel>
+            {{ $t('transparentTerrain.settings.global.nearOpacity') }}
+          </VcsLabel>
+        </v-col>
+        <v-col class="d-flex justify-end">
+          <VcsLabel>
+            {{ opacityByDistance.nearValue }}
+          </VcsLabel>
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-1">
+        <vcs-slider
+          id="sliderInput"
+          type="number"
+          :dense="false"
+          step="1"
+          v-model.number="opacityByDistance.nearValue"
+          :disabled="!useOpacityByDistance"
+        />
+      </v-row>
+      <v-row no-gutters class="py-0 px-1">
+        <v-col>
+          <VcsLabel>
+            {{ $t('transparentTerrain.settings.global.far') }}
+          </VcsLabel>
+        </v-col>
+        <v-col class="d-flex justify-end">
+          <VcsTextField
+            id="distanceNear"
+            type="number"
+            :disabled="!useOpacityByDistance"
+            v-model.number="opacityByDistance.far"
+          />
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-1">
+        <v-col>
+          <VcsLabel>
+            {{ $t('transparentTerrain.settings.global.farOpacity') }}
+          </VcsLabel>
+        </v-col>
+        <v-col class="d-flex justify-end">
+          <VcsLabel>
+            {{ opacityByDistance.farValue }}
+          </VcsLabel>
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-1">
+        <vcs-slider
+          id="sliderInput"
+          type="number"
+          :dense="false"
+          step="1"
+          v-model.number="opacityByDistance.farValue"
+          :disabled="!useOpacityByDistance"
+        />
+      </v-row>
+    </VcsFormSection>
+  </v-sheet>
+</template>
+<script lang="ts">
+  import {
+    VcsCheckbox,
+    VcsFormSection,
+    VcsLabel,
+    VcsSlider,
+    VcsTextField,
+  } from '@vcmap/ui';
+  import { VRow, VCol, VSheet, VSwitch } from 'vuetify/lib';
+  import { computed, defineComponent, inject } from 'vue';
+  import TransparentTerrainManager from '../transparentTerrainManager.js';
+  import GlobalTerrainMode from '../mode/globalTerrainMode.js';
+
+  export default defineComponent({
+    name: 'GlobalTerrainComponent',
+    components: {
+      VcsFormSection,
+      VSwitch,
+      VcsSlider,
+      VcsCheckbox,
+      VcsLabel,
+      VRow,
+      VCol,
+      VSheet,
+      VcsTextField,
+    },
+    setup() {
+      const manager = inject<TransparentTerrainManager>('manager')!;
+      const terrainMode = manager.currentMode.value! as GlobalTerrainMode;
+
+      const { collision, opacity, opacityByDistance, useOpacityByDistance } =
+        terrainMode;
+
+      const moveCameraUnderTerrain = computed({
+        get() {
+          return !collision.value;
+        },
+        set(value) {
+          collision.value = !value;
+        },
+      });
+
+      return {
+        moveCameraUnderTerrain,
+        opacity,
+        opacityByDistance,
+        useOpacityByDistance,
+      };
+    },
+  });
+</script>

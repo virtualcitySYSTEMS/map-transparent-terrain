@@ -1,50 +1,37 @@
 {
-  "name": "@vcmap/hello-world",
-  "version": "1.0.9",
-  "description": "A small hello world plugin",
+  "name": "@vcmap/transparent-terrain",
+  "version": "1.0.0",
+  "description": "VCM Transparent Terrain Plugin",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
+    "prepublishOnly": "vcmplugin build",
     "build": "vcmplugin build",
     "pack": "vcmplugin pack",
     "start": "vcmplugin serve",
     "preview": "vcmplugin preview",
     "buildStagingApp": "vcmplugin buildStagingApp",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
     "lint:js": "eslint . --ext .vue,.js,.cjs,.mjs,.ts,.cts,.mts",
     "lint:prettier": "prettier --check .",
     "lint": "npm run lint:js && npm run lint:prettier",
-    "format": "prettier --write --list-different . && npm run lint:js -- --fix"
+    "format": "prettier --write --list-different . && npm run lint:js -- --fix",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "type-check": "vue-tsc --noEmit"
   },
-  "devDependencies": {
-    "@vcmap/plugin-cli": "^2.1.9",
-    "@vcsuite/eslint-config": "^3.0.3",
-    "@vitest/coverage-c8": "^0.31.1",
-    "jest-canvas-mock": "^2.4.0",
-    "jsdom": "^21.1.2",
-    "resize-observer-polyfill": "1.5.1",
-    "vitest": "^0.31.0"
-  },
-  "peerDependencies": {
-    "@vcmap/core": "^5.0.0-rc.35",
-    "@vcmap/ui": "^5.0.0-rc.25",
-    "vue": "~2.7.3",
-    "vuetify": "~2.6.7"
-  },
+  "author": "Virtual City Systems",
+  "license": "MIT",
   "keywords": [
     "vcmap",
     "plugin"
   ],
   "files": [
-    "plugin-assets",
     "src/",
     "dist/",
-    "tests/",
+    "plugin-assets/",
     "LICENSE.md",
     "README.md",
-    "config.json",
-    "vitest.config.js"
+    "CHANGELOG.md"
   ],
   "exports": {
     ".": "./src/index.js",
@@ -58,6 +45,25 @@
     "extends": "@vcsuite/eslint-config/vue"
   },
   "prettier": "@vcsuite/eslint-config/prettier.js",
-  "author": "Ben Kuster <bkuster@vc.systems>",
-  "license": "MIT"
+  "peerDependencies": {
+    "@vcmap-cesium/engine": "^4.0.3",
+    "@vcmap/core": "^5.1.1",
+    "@vcmap/ui": "^5.1.0",
+    "ol": "^7.5.2",
+    "vue": "~2.7.3",
+    "vuetify": "~2.6.7"
+  },
+  "devDependencies": {
+    "@vcmap/plugin-cli": "^3.0.0",
+    "@vcsuite/eslint-config": "^3.0.7",
+    "@vitest/coverage-v8": "^0.34.6",
+    "jest-canvas-mock": "^2.5.2",
+    "jsdom": "^22.1.0",
+    "node-fetch": "^2.7.0",
+    "resize-observer-polyfill": "^1.5.1",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.4",
+    "vue-tsc": "^1.8.22"
+  },
+  "mapVersion": "^5.1"
 }

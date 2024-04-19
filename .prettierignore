@@ -1,7 +1,7 @@
-node_modules
-/dist
+dist/
+plugin-assets/
+public/
 test-report.xml
-
 
 # local env files
 .env.local
@@ -28,3 +28,6 @@ coverage
 
 # static output
 docs
+
+# index.html (prettier does not take modern html 5 rules that closing tags for void elements should be avoided)
+assets/index.html
