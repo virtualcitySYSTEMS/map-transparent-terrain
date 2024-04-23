@@ -1,6 +1,6 @@
 {
   "name": "@vcmap/transparent-terrain",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VCM Transparent Terrain Plugin",
   "type": "module",
   "main": "src/index.ts",
