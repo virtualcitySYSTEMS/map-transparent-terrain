@@ -13,16 +13,13 @@
         </VcsLabel>
       </v-col>
       <v-col class="d-flex justify-end">
-        <VcsLabel>
-          {{ opacity }}
-        </VcsLabel>
+        <VcsLabel> {{ opacity }} % </VcsLabel>
       </v-col>
     </v-row>
     <v-row no-gutters class="py-0 px-1">
       <vcs-slider
         id="sliderInput"
         type="number"
-        :dense="false"
         step="1"
         v-model.number="opacity"
         :disabled="useOpacityByDistance"
@@ -32,7 +29,7 @@
       :expandable="true"
       heading="transparentTerrain.settings.global.nearFar"
     >
-      <v-row no-gutters class="py-0 px-1">
+      <v-row no-gutters class="py-1 px-3">
         <v-switch
           v-model="useOpacityByDistance"
           :label="$t('transparentTerrain.settings.global.distanceOpacity')"
@@ -50,6 +47,8 @@
             type="number"
             :disabled="!useOpacityByDistance"
             v-model.number="opacityByDistance.near"
+            hide-spin-buttons
+            unit="m"
           />
         </v-col>
       </v-row>
@@ -60,16 +59,13 @@
           </VcsLabel>
         </v-col>
         <v-col class="d-flex justify-end">
-          <VcsLabel>
-            {{ opacityByDistance.nearValue }}
-          </VcsLabel>
+          <VcsLabel> {{ opacityByDistance.nearValue }} % </VcsLabel>
         </v-col>
       </v-row>
       <v-row no-gutters class="py-0 px-1">
         <vcs-slider
           id="sliderInput"
           type="number"
-          :dense="false"
           step="1"
           v-model.number="opacityByDistance.nearValue"
           :disabled="!useOpacityByDistance"
@@ -87,6 +83,8 @@
             type="number"
             :disabled="!useOpacityByDistance"
             v-model.number="opacityByDistance.far"
+            hide-spin-buttons
+            unit="m"
           />
         </v-col>
       </v-row>
@@ -97,16 +95,13 @@
           </VcsLabel>
         </v-col>
         <v-col class="d-flex justify-end">
-          <VcsLabel>
-            {{ opacityByDistance.farValue }}
-          </VcsLabel>
+          <VcsLabel> {{ opacityByDistance.farValue }} % </VcsLabel>
         </v-col>
       </v-row>
       <v-row no-gutters class="py-0 px-1">
         <vcs-slider
           id="sliderInput"
           type="number"
-          :dense="false"
           step="1"
           v-model.number="opacityByDistance.farValue"
           :disabled="!useOpacityByDistance"
@@ -123,7 +118,7 @@
     VcsSlider,
     VcsTextField,
   } from '@vcmap/ui';
-  import { VRow, VCol, VSheet, VSwitch } from 'vuetify/lib';
+  import { VRow, VCol, VSheet, VSwitch } from 'vuetify/components';
   import { computed, defineComponent, inject } from 'vue';
   import TransparentTerrainManager from '../transparentTerrainManager.js';
   import GlobalTerrainMode from '../mode/globalTerrainMode.js';
@@ -166,3 +161,8 @@
     },
   });
 </script>
+<style lang="scss" scoped>
+  :deep(.vcs-text-field input) {
+    text-align: right;
+  }
+</style>

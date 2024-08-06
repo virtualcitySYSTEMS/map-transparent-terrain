@@ -1,15 +1,16 @@
 <template>
   <v-sheet class="hide-scrollbar">
+    <VcsHelp
+      text="transparentTerrain.settings.rectangle.hint"
+      :show="true"
+      v-if="createExtent.active"
+    />
     <VcsFormSection
       heading="transparentTerrain.settings.modify"
       :header-actions="actions"
       :action-button-list-overflow-count="5"
-    >
-      <v-row v-if="!isPersistent" no-gutters class="py-2 px-2">
-        <p>{{ $t('transparentTerrain.settings.rectangle.hint') }}</p>
-      </v-row>
-      <v-divider />
-    </VcsFormSection>
+      v-else
+    />
     <VcsExtent v-model="localExtent" />
     <v-divider class="mt-2" />
     <GlobalTerrainComponent />
@@ -21,8 +22,9 @@
     VcsExtent,
     setupExtentComponentActions,
     NotificationType,
+    VcsHelp,
   } from '@vcmap/ui';
-  import { VRow, VSheet, VDivider } from 'vuetify/lib';
+  import { VSheet, VDivider } from 'vuetify/components';
   import {
     computed,
     defineComponent,
@@ -40,10 +42,10 @@
   export default defineComponent({
     name: 'RectangleTerrainComponent',
     components: {
+      VcsHelp,
       VcsExtent,
       VcsFormSection,
       GlobalTerrainComponent,
-      VRow,
       VSheet,
       VDivider,
     },
@@ -76,7 +78,9 @@
         ],
         destroy,
         layer,
-      } = setupExtentComponentActions(manager.app, extent, false);
+      } = setupExtentComponentActions(manager.app, extent);
+
+      const createExtent = ref(createExtentAction);
 
       (layer.style as VectorStyleItem).fillColor = [255, 255, 255, 0];
 
@@ -96,7 +100,7 @@
           // eslint-disable-next-line
           // @ts-ignore
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-floating-promises
-          createExtentAction.callback();
+          createExtent.value.callback();
         }
       });
 
@@ -113,7 +117,13 @@
         ],
         isPersistent,
         localExtent,
+        createExtent,
       };
     },
   });
 </script>
+<style lang="scss" scoped>
+  :deep(.vcs-text-field input) {
+    text-align: right;
+  }
+</style>

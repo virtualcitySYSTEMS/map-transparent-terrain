@@ -33,7 +33,7 @@ export function createImportCallback(
           type: NotificationType.SUCCESS,
           message: app.vueI18n.t('components.import.featuresAdded', [
             category.collection.size - before,
-          ]) as string,
+          ]),
         });
       } catch (err) {
         app.notifier.add({

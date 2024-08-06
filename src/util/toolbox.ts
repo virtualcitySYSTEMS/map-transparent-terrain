@@ -1,5 +1,11 @@
-import { ToolboxSelectItem, ToolboxType, VcsUiApp } from '@vcmap/ui';
-import { watch } from 'vue';
+import {
+  ToolboxSelectItem,
+  ToolboxType,
+  VcsUiApp,
+  WindowComponentOptions,
+  WindowSlot,
+} from '@vcmap/ui';
+import { reactive, watch } from 'vue';
 import { CesiumMap } from '@vcmap/core';
 import { ToolboxSelectAction } from '@vcmap/ui/src/manager/toolbox/toolboxManager';
 import { name } from '../../package.json';
@@ -18,6 +24,8 @@ export const TransparentTerrainTypeIcon: Record<
 export function addToolButtons(
   app: VcsUiApp,
   manager: TransparentTerrainManager,
+  windowId: string,
+  editor: WindowComponentOptions,
 ): () => void {
   const createCreateButton = (
     type: TransparentTerrainType,
@@ -27,13 +35,26 @@ export function addToolButtons(
     icon: TransparentTerrainTypeIcon[type],
   });
 
-  const action: ToolboxSelectAction = {
+  const action: ToolboxSelectAction = reactive({
     name: 'creation',
     currentIndex: 0,
     active: false,
+    background: false,
     callback() {
       if (this.active) {
-        manager.stop();
+        if (this.background) {
+          app.windowManager.add(
+            {
+              ...editor,
+              id: windowId,
+              parentId: 'category-manager',
+              slot: WindowSlot.DYNAMIC_CHILD,
+            },
+            name,
+          );
+        } else {
+          manager.stop();
+        }
       } else {
         manager.startNew(this.tools[this.currentIndex].name);
       }
@@ -47,7 +68,7 @@ export function addToolButtons(
       createCreateButton(TransparentTerrainType.Rectangle),
       createCreateButton(TransparentTerrainType.Global),
     ],
-  };
+  });
 
   const createId = app.toolboxManager.add(
     {
@@ -69,18 +90,30 @@ export function addToolButtons(
     }
   });
 
-  const mapSwitchedListener = app.maps.mapActivated.addEventListener((map) => {
-    manager.stop();
-    if (!(map instanceof CesiumMap)) {
-      action.disabled = true;
-    } else {
-      action.disabled = false;
-    }
-  });
+  const listeners = [
+    app.maps.mapActivated.addEventListener((map) => {
+      if (!(map instanceof CesiumMap)) {
+        if (app.windowManager.has(windowId)) {
+          app.windowManager.remove(windowId);
+        }
+      }
+      action.disabled = !(map instanceof CesiumMap);
+    }),
+    app.windowManager.added.addEventListener(({ id }) => {
+      if (id === windowId) {
+        action.background = false;
+      }
+    }),
+    app.windowManager.removed.addEventListener(({ id }) => {
+      if (id === windowId) {
+        action.background = true;
+      }
+    }),
+  ];
 
   return (): void => {
     terrainModeListener();
-    mapSwitchedListener();
+    listeners.forEach((cb) => cb());
     app.toolboxManager.remove(createId);
   };
 }

@@ -16,7 +16,7 @@ class RectangleTerrainMode extends GlobalTerrainMode {
 
   // eslint-disable-next-line class-methods-use-this
   get defaultExtent(): Array<number> {
-    return [0, 0, 1e-10, 1e-10];
+    return [-180, -90, 180, 90];
   }
 
   initialize(): void {
@@ -80,9 +80,10 @@ class RectangleTerrainMode extends GlobalTerrainMode {
       super.deactivate();
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      (
-        this.app.maps.activeMap as CesiumMap
-      ).getScene()!.globe.translucency.rectangle = undefined;
+      if (this.app.maps.activeMap instanceof CesiumMap) {
+        this.app.maps.activeMap.getScene()!.globe.translucency.rectangle =
+          new Rectangle();
+      }
     }
   }
 }

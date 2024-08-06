@@ -1,11 +1,6 @@
 <template>
   <v-sheet class="hide-scrollbar">
-    <div>
-      <v-row no-gutters class="py-2 px-2">
-        {{ $t('transparentTerrain.settings.box.hint') }}
-      </v-row>
-    </div>
-    <v-divider />
+    <VcsHelp text="transparentTerrain.settings.box.hint" :show="true" />
     <v-row no-gutters class="py-0 px-1">
       <v-col>
         <VcsLabel> {{ $t('transparentTerrain.settings.geometry') }} </VcsLabel>
@@ -19,6 +14,8 @@
           step="10"
           :prefix="$t('transparentTerrain.settings.length')"
           v-model.number="localBoxSize.x"
+          hide-spin-buttons
+          unit="m"
         />
       </v-col>
       <v-col class="py-0 px-1">
@@ -28,6 +25,8 @@
           step="10"
           :prefix="$t('transparentTerrain.settings.width')"
           v-model.number="localBoxSize.y"
+          hide-spin-buttons
+          unit="m"
         />
       </v-col>
       <v-col class="py-0 px-1">
@@ -37,6 +36,8 @@
           step="10"
           :prefix="$t('transparentTerrain.settings.depth')"
           v-model.number="localBoxSize.z"
+          hide-spin-buttons
+          unit="m"
         />
       </v-col>
     </v-row>
@@ -55,6 +56,7 @@
           prefix="X"
           :decimals="2"
           v-model.number="boxPosition.x"
+          unit="m"
         />
       </v-col>
       <v-col class="py-0 px-1">
@@ -65,20 +67,22 @@
           prefix="Y"
           :decimals="2"
           v-model.number="boxPosition.y"
+          unit="m"
         />
       </v-col>
     </v-row>
-    <v-row no-gutters class="py-0 px-1">
+    <v-row no-gutters class="py-1 px-3">
       <v-switch
         v-model="showTexture"
         :label="$t('transparentTerrain.settings.box.showTexture')"
+        hide-details
       />
     </v-row>
   </v-sheet>
 </template>
 <script lang="ts">
-  import { VcsLabel, VcsTextField } from '@vcmap/ui';
-  import { VRow, VCol, VSheet, VDivider, VSwitch } from 'vuetify/lib';
+  import { VcsHelp, VcsLabel, VcsTextField } from '@vcmap/ui';
+  import { VRow, VCol, VSheet, VDivider, VSwitch } from 'vuetify/components';
   import { defineComponent, inject, reactive, shallowRef, watch } from 'vue';
   import { Cartesian3 } from '@vcmap-cesium/engine';
   import TransparentTerrainManager from '../transparentTerrainManager.js';
@@ -87,6 +91,7 @@
   export default defineComponent({
     name: 'BoxTerrainComponent',
     components: {
+      VcsHelp,
       VSwitch,
       VcsTextField,
       VcsLabel,
@@ -122,7 +127,6 @@
             Number.isFinite(localBoxSize.y) &&
             Number.isFinite(localBoxSize.z) &&
             localBoxSize.x > 0 &&
-            localBoxSize.y > 0 &&
             localBoxSize.y > 0
           ) {
             currentMode.updateBox(localBoxSize, boxPosition, showTexture.value);
@@ -141,3 +145,8 @@
     },
   });
 </script>
+<style lang="scss" scoped>
+  :deep(.vcs-text-field input) {
+    text-align: right;
+  }
+</style>

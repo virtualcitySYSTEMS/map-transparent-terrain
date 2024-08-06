@@ -8,7 +8,7 @@
     />
     <BoxTerrainComponent v-if="terrainType === TransparentTerrainType.Box" />
     <v-divider class="mt-3" />
-    <div class="d-flex w-full justify-space-between px-2 pt-2 pb-1">
+    <div class="d-flex w-100 justify-space-between px-2 pt-2 pb-1">
       <VcsFormButton
         icon="$vcsComponentsPlus"
         @click="addToCategory"
@@ -23,8 +23,8 @@
 </template>
 <script lang="ts">
   import { CollectionComponentClass, VcsFormButton } from '@vcmap/ui';
-  import { VSheet, VDivider } from 'vuetify/lib';
-  import { inject, computed, onUnmounted, defineComponent } from 'vue';
+  import { VSheet, VDivider } from 'vuetify/components';
+  import { inject, computed, defineComponent } from 'vue';
   import { Category } from '@vcmap/core';
   import GlobalTerrainComponent from './GlobalTerrainComponent.vue';
   import { TransparentTerrainType } from '../mode/terrainMode.js';
@@ -72,12 +72,6 @@
       const currentMode = manager.currentMode.value!;
       const terrainType = currentMode.type;
       const isPersistent = computed(() => currentMode.isPersistent.value);
-
-      onUnmounted(() => {
-        if (!currentMode.isPersistent.value) {
-          currentMode.deactivate();
-        }
-      });
 
       return {
         terrainType,

@@ -25,8 +25,8 @@ export default function setupTerrainWindow(
   manager: TransparentTerrainManager,
   collectionComponent: CollectionComponentClass<TransparentTerrainItem>,
   category: Category<TransparentTerrainItem>,
-): { destroy: () => void } {
-  const tempWindowId = 'temporaryTerrainWindowId';
+): { destroy: () => void; windowId: string; editor: WindowComponentOptions } {
+  const windowId = `${collectionComponent.id}-editor`;
 
   const state: Partial<WindowState> = {
     headerTitle: 'transparentTerrain.header.title',
@@ -92,8 +92,8 @@ export default function setupTerrainWindow(
   }
 
   const terrainModeListener = watch(manager.currentMode, () => {
-    if (app.windowManager.has(tempWindowId)) {
-      app.windowManager.remove(tempWindowId);
+    if (app.windowManager.has(windowId)) {
+      app.windowManager.remove(windowId);
     }
     const currentMode = manager.currentMode.value;
     if (currentMode) {
@@ -103,7 +103,7 @@ export default function setupTerrainWindow(
           app.windowManager.add(
             {
               ...editor,
-              id: tempWindowId,
+              id: windowId,
               parentId: 'category-manager',
               slot: WindowSlot.DYNAMIC_CHILD,
             },
@@ -137,7 +137,9 @@ export default function setupTerrainWindow(
       renameListener();
       destroyImportAction();
       destroyExportAction();
-      app.windowManager.remove(tempWindowId);
+      app.windowManager.remove(windowId);
     },
+    windowId,
+    editor,
   };
 }

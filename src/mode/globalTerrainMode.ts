@@ -169,9 +169,9 @@ class GlobalTerrainMode extends TerrainMode {
       this.useOpacityByDistanceWatcher();
       this.opacityByDistanceWatcher();
       this.collisionWatcher();
-      (
-        this.app.maps.activeMap as CesiumMap
-      ).getScene()!.globe.translucency.enabled = false;
+      if (this.app.maps.activeMap instanceof CesiumMap) {
+        this.app.maps.activeMap.getScene()!.globe.translucency.enabled = false;
+      }
     }
   }
 }

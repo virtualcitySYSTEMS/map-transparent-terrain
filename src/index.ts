@@ -30,13 +30,22 @@ export default function transparentTerrainPlugin(): VcsPlugin<
         destroy: destroyCategory,
       } = await createCategory(vcsUiApp);
 
-      const destroyButtons = addToolButtons(vcsUiApp, terrainManager);
-
-      const { destroy: destroyTerrainWindow } = setupTerrainWindow(
+      const {
+        destroy: destroyTerrainWindow,
+        windowId,
+        editor,
+      } = setupTerrainWindow(
         vcsUiApp,
         terrainManager,
         collectionComponent,
         category,
+      );
+
+      const destroyButtons = addToolButtons(
+        vcsUiApp,
+        terrainManager,
+        windowId,
+        editor,
       );
 
       destroy = (): void => {
