@@ -22,9 +22,13 @@
   </v-sheet>
 </template>
 <script lang="ts">
-  import { CollectionComponentClass, VcsFormButton } from '@vcmap/ui';
+  import {
+    CollectionComponentClass,
+    VcsFormButton,
+    WindowState,
+  } from '@vcmap/ui';
   import { VSheet, VDivider } from 'vuetify/components';
-  import { inject, computed, defineComponent } from 'vue';
+  import { inject, computed, defineComponent, watch } from 'vue';
   import { Category } from '@vcmap/core';
   import GlobalTerrainComponent from './GlobalTerrainComponent.vue';
   import { TransparentTerrainType } from '../mode/terrainMode.js';
@@ -58,7 +62,8 @@
       VSheet,
       VcsFormButton,
     },
-    setup(props) {
+    setup(props, { attrs }) {
+      const windowState = attrs['window-state'] as WindowState;
       const manager = inject<TransparentTerrainManager>('manager')!;
       const category = inject<Category<TransparentTerrainItem>>('category')!;
       const collectionComponent = inject<
@@ -72,6 +77,10 @@
       const currentMode = manager.currentMode.value!;
       const terrainType = currentMode.type;
       const isPersistent = computed(() => currentMode.isPersistent.value);
+
+      watch(currentMode.name, () => {
+        windowState.headerTitle = currentMode.name.value;
+      });
 
       return {
         terrainType,
