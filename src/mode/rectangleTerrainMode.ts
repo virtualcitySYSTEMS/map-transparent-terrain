@@ -82,7 +82,7 @@ class RectangleTerrainMode extends GlobalTerrainMode {
       // @ts-ignore
       if (this.app.maps.activeMap instanceof CesiumMap) {
         this.app.maps.activeMap.getScene()!.globe.translucency.rectangle =
-          new Rectangle();
+          Rectangle.fromDegrees(...this.defaultExtent);
       }
     }
   }

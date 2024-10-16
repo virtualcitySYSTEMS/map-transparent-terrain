@@ -15,9 +15,12 @@
         :disabled="isPersistent"
         :tooltip="'transparentTerrain.create.tooltip.addToWorkspace'"
       />
-      <VcsFormButton variant="filled" @click="createNew">{{
-        $t('transparentTerrain.create.new')
-      }}</VcsFormButton>
+      <VcsFormButton
+        variant="filled"
+        :disabled="terrainType === TransparentTerrainType.Global"
+        @click="createNew"
+        >{{ $t('transparentTerrain.create.new') }}</VcsFormButton
+      >
     </div>
   </v-sheet>
 </template>
