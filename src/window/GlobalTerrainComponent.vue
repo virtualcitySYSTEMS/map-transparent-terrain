@@ -59,7 +59,9 @@
           </VcsLabel>
         </v-col>
         <v-col class="d-flex justify-end">
-          <VcsLabel> {{ opacityByDistance.nearValue }} % </VcsLabel>
+          <VcsLabel :disabled="!useOpacityByDistance">
+            {{ opacityByDistance.nearValue }} %
+          </VcsLabel>
         </v-col>
       </v-row>
       <v-row no-gutters class="py-0 px-1">
@@ -95,7 +97,9 @@
           </VcsLabel>
         </v-col>
         <v-col class="d-flex justify-end">
-          <VcsLabel> {{ opacityByDistance.farValue }} % </VcsLabel>
+          <VcsLabel :disabled="!useOpacityByDistance">
+            {{ opacityByDistance.farValue }} %
+          </VcsLabel>
         </v-col>
       </v-row>
       <v-row no-gutters class="py-0 px-1">
