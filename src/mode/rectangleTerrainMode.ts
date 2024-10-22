@@ -19,6 +19,19 @@ class RectangleTerrainMode extends GlobalTerrainMode {
     return [-180, -90, 180, 90];
   }
 
+  extentNotEqual(): boolean {
+    if (!this.extent) {
+      return true;
+    } else {
+      return (
+        this.extent.length !== this.defaultExtent.length ||
+        !this.extent.every(
+          (value, index) => value === this.defaultExtent[index],
+        )
+      );
+    }
+  }
+
   initialize(): void {
     if (!this.initialized) {
       super.initialize();
@@ -31,9 +44,17 @@ class RectangleTerrainMode extends GlobalTerrainMode {
   activate(): void {
     if (!this.active) {
       super.activate();
-      (
-        this.app.maps.activeMap as CesiumMap
-      ).getScene()!.globe.translucency.rectangle = Rectangle.fromDegrees();
+      if (this.extentNotEqual()) {
+        (
+          this.app.maps.activeMap as CesiumMap
+        ).getScene()!.globe.translucency.rectangle = Rectangle.fromDegrees(
+          ...this.extent!,
+        );
+      } else {
+        (
+          this.app.maps.activeMap as CesiumMap
+        ).getScene()!.globe.translucency.rectangle = Rectangle.fromDegrees();
+      }
     }
   }
 
