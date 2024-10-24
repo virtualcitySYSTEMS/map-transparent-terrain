@@ -64,11 +64,10 @@ export default function transparentTerrainPlugin(): VcsPlugin<
             new: 'New',
             tooltip: {
               addToWorkspace: 'Add to My Workspace',
-              [TransparentTerrainType.Box]: 'Create transparent box terrain',
+              [TransparentTerrainType.Box]: 'Create ground excavation area',
               [TransparentTerrainType.Rectangle]:
-                'Create transparent rectangle terrain',
-              [TransparentTerrainType.Global]:
-                'Create transparent global terrain',
+                'Create transparent rectangle',
+              [TransparentTerrainType.Global]: 'Create transparent globe',
             },
             title: {
               [TransparentTerrainType.Box]: 'Temporary box terrain',
@@ -121,12 +120,10 @@ export default function transparentTerrainPlugin(): VcsPlugin<
             new: 'Neu',
             tooltip: {
               addToWorkspace: 'In Mein Arbeitsbereich hinzufügen',
-              [TransparentTerrainType.Box]:
-                'Transparentes Box-Gelände erstellen',
+              [TransparentTerrainType.Box]: 'Geländeaushub erstellen',
               [TransparentTerrainType.Rectangle]:
-                'Transparentes Rechteck-Gelände erstellen',
-              [TransparentTerrainType.Global]:
-                'Transparentes globale Gelände erstellen',
+                'Transparentes Rechteck erstellen',
+              [TransparentTerrainType.Global]: 'Globus transparent stellen ',
             },
             title: {
               [TransparentTerrainType.Box]: 'Temporäres Box-Gelände',

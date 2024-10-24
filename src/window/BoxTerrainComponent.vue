@@ -9,7 +9,6 @@
     <v-row no-gutters>
       <v-col class="py-0 px-1">
         <VcsTextField
-          id="length"
           type="number"
           step="10"
           :prefix="$t('transparentTerrain.settings.length')"
@@ -20,7 +19,6 @@
       </v-col>
       <v-col class="py-0 px-1">
         <VcsTextField
-          id="width"
           type="number"
           step="10"
           :prefix="$t('transparentTerrain.settings.width')"
@@ -31,7 +29,6 @@
       </v-col>
       <v-col class="py-0 px-1">
         <VcsTextField
-          id="depth"
           type="number"
           step="10"
           :prefix="$t('transparentTerrain.settings.depth')"
@@ -50,7 +47,6 @@
     <v-row no-gutters>
       <v-col class="py-0 px-1">
         <VcsTextField
-          id="coordinateX"
           type="number"
           step="10"
           prefix="X"
@@ -61,7 +57,6 @@
       </v-col>
       <v-col class="py-0 px-1">
         <VcsTextField
-          id="coordinateY"
           type="number"
           step="10"
           prefix="Y"

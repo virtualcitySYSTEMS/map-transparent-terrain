@@ -18,7 +18,6 @@
     </v-row>
     <v-row no-gutters class="py-0 px-1">
       <vcs-slider
-        id="sliderInput"
         type="number"
         step="1"
         v-model.number="opacity"
@@ -43,7 +42,6 @@
         </v-col>
         <v-col class="d-flex justify-end">
           <VcsTextField
-            id="distanceNear"
             type="number"
             :disabled="!useOpacityByDistance"
             v-model.number="opacityByDistance.near"
@@ -66,7 +64,6 @@
       </v-row>
       <v-row no-gutters class="py-0 px-1">
         <vcs-slider
-          id="sliderInput"
           type="number"
           step="1"
           v-model.number="opacityByDistance.nearValue"
@@ -81,7 +78,6 @@
         </v-col>
         <v-col class="d-flex justify-end">
           <VcsTextField
-            id="distanceNear"
             type="number"
             :disabled="!useOpacityByDistance"
             v-model.number="opacityByDistance.far"
@@ -104,7 +100,6 @@
       </v-row>
       <v-row no-gutters class="py-0 px-1">
         <vcs-slider
-          id="sliderInput"
           type="number"
           step="1"
           v-model.number="opacityByDistance.farValue"
