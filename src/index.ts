@@ -76,7 +76,7 @@ export default function transparentTerrainPlugin(): VcsPlugin<
             },
           },
           category: {
-            remove: 'Remove',
+            zoomTo: 'Zoom to item extent',
           },
           settings: {
             modify: 'Modify',
@@ -132,7 +132,7 @@ export default function transparentTerrainPlugin(): VcsPlugin<
             },
           },
           category: {
-            remove: 'Entfernen',
+            zoomTo: 'Auf Elementausdehnung zoomen',
           },
           settings: {
             modify: 'Editieren',

@@ -19,7 +19,7 @@ class TerrainMode {
 
   protected active: boolean;
 
-  protected projection: Projection;
+  readonly projection: Projection;
 
   name: ShallowRef<string | undefined>;
 

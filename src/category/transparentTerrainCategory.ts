@@ -1,12 +1,21 @@
-import { Category, CesiumMap } from '@vcmap/core';
+import {
+  Category,
+  CesiumMap,
+  Extent,
+  ExtentOptions,
+  Viewpoint,
+} from '@vcmap/core';
 import {
   CollectionComponentClass,
   CollectionComponentListItem,
   createSupportedMapMappingFunction,
   VcsUiApp,
 } from '@vcmap/ui';
+import { isEmpty } from 'ol/extent';
 import { name as packageName } from '../../package.json';
 import TerrainMode from '../mode/terrainMode.js';
+import BoxTerrainMode from '../mode/boxTerrainMode.js';
+import RectangleTerrainMode from '../mode/rectangleTerrainMode.js';
 
 export type TransparentTerrainItem = {
   name?: string;
@@ -48,6 +57,7 @@ function itemMappingFunction(
   item: TransparentTerrainItem,
   c: CollectionComponentClass<TransparentTerrainItem>,
   categoryListItem: CollectionComponentListItem,
+  app: VcsUiApp,
 ): void {
   categoryListItem.title = item.name!;
 
@@ -58,10 +68,39 @@ function itemMappingFunction(
   };
 
   categoryListItem.actions.push({
-    name: 'transparentTerrain.category.remove',
-    callback(): void {
-      item.mode?.deactivate();
-      c.collection.remove(item);
+    name: 'transparentTerrain.category.zoomTo',
+    disabled:
+      !(item.mode instanceof BoxTerrainMode) &&
+      !(item.mode instanceof RectangleTerrainMode),
+    async callback(): Promise<void> {
+      let options: ExtentOptions;
+      if (item.mode instanceof BoxTerrainMode) {
+        options = {
+          coordinates: [
+            item.mode.projectPosition.value.x - item.mode.boxSize.x / 2,
+            item.mode.projectPosition.value.y - item.mode.boxSize.y / 2,
+            item.mode.projectPosition.value.x + item.mode.boxSize.x / 2,
+            item.mode.projectPosition.value.y + item.mode.boxSize.y / 2,
+          ],
+          projection: item.mode.projection,
+        };
+      } else if (item.mode instanceof RectangleTerrainMode) {
+        options = {
+          coordinates: item.mode.getExtent().extent,
+          projection: item.mode.getExtent().projection,
+        };
+      } else {
+        return;
+      }
+
+      if (options.coordinates && !isEmpty(options.coordinates)) {
+        const vp = Viewpoint.createViewpointFromExtent(new Extent(options));
+        if (vp) {
+          c.selection.value = [categoryListItem];
+          vp.animate = true;
+          await app.maps.activeMap?.gotoViewpoint(vp);
+        }
+      }
     },
   });
 }
@@ -84,6 +123,7 @@ export async function createCategory(vcsApp: VcsUiApp): Promise<{
         selectable: true,
         overflowCount: 3,
         renamable: true,
+        removable: true,
       },
     );
 
@@ -94,7 +134,8 @@ export async function createCategory(vcsApp: VcsUiApp): Promise<{
     () => {
       return true;
     },
-    itemMappingFunction,
+    (item, c, categoryListItem) =>
+      itemMappingFunction(item, c, categoryListItem, vcsApp),
     packageName,
     [category.name],
   );
