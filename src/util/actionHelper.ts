@@ -1,15 +1,10 @@
-import { Category, parseGeoJSON, writeGeoJSON } from '@vcmap/core';
-import {
-  CollectionComponentClass,
-  downloadText,
-  NotificationType,
-  VcsUiApp,
-} from '@vcmap/ui';
-import TransparentTerrainManager from '../transparentTerrainManager.js';
-import {
-  addToCategoryCollection,
-  TransparentTerrainItem,
-} from '../category/transparentTerrainCategory.js';
+import type { Category } from '@vcmap/core';
+import { parseGeoJSON, writeGeoJSON } from '@vcmap/core';
+import type { CollectionComponentClass, VcsUiApp } from '@vcmap/ui';
+import { downloadText, NotificationType } from '@vcmap/ui';
+import type TransparentTerrainManager from '../transparentTerrainManager.js';
+import type { TransparentTerrainItem } from '../category/transparentTerrainCategory.js';
+import { addToCategoryCollection } from '../category/transparentTerrainCategory.js';
 
 export function createImportCallback(
   app: VcsUiApp,

@@ -1,4 +1,4 @@
-import { VcsPlugin, VcsUiApp } from '@vcmap/ui';
+import type { VcsPlugin, VcsUiApp } from '@vcmap/ui';
 import { name, version, mapVersion } from '../package.json';
 import { addToolButtons } from './util/toolbox.js';
 import TransparentTerrainManager from './transparentTerrainManager.js';

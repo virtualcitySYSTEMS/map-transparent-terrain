@@ -1,7 +1,8 @@
 import { Color, NearFarScalar } from '@vcmap-cesium/engine';
-import { reactive, ShallowRef, shallowRef, UnwrapRef, watch } from 'vue';
-import { Feature } from 'ol';
-import { VcsUiApp } from '@vcmap/ui';
+import type { ShallowRef, UnwrapRef } from 'vue';
+import { reactive, shallowRef, watch } from 'vue';
+import type { Feature } from 'ol';
+import type { VcsUiApp } from '@vcmap/ui';
 import { CesiumMap } from '@vcmap/core';
 import TerrainMode, { TransparentTerrainType } from './terrainMode.js';
 
@@ -29,16 +30,16 @@ class GlobalTerrainMode extends TerrainMode {
   readonly collision: ShallowRef<boolean>;
 
   // eslint-disable-next-line class-methods-use-this
-  private opacityWatcher: () => void = () => {};
+  private _opacityWatcher: () => void = () => {};
 
   // eslint-disable-next-line class-methods-use-this
-  private useOpacityByDistanceWatcher: () => void = () => {};
+  private _useOpacityByDistanceWatcher: () => void = () => {};
 
   // eslint-disable-next-line class-methods-use-this
-  private opacityByDistanceWatcher: () => void = () => {};
+  private _opacityByDistanceWatcher: () => void = () => {};
 
   // eslint-disable-next-line class-methods-use-this
-  private collisionWatcher: () => void = () => {};
+  private _collisionWatcher: () => void = () => {};
 
   constructor(app: VcsUiApp) {
     super(app);
@@ -70,7 +71,7 @@ class GlobalTerrainMode extends TerrainMode {
   }
 
   initialize(): void {
-    if (!this.initialized) {
+    if (!this._initialized) {
       super.initialize();
       (
         this.app.maps.activeMap as CesiumMap
@@ -83,24 +84,24 @@ class GlobalTerrainMode extends TerrainMode {
   }
 
   activate(): void {
-    if (!this.active) {
+    if (!this._active) {
       super.activate();
       (
         this.app.maps.activeMap as CesiumMap
       ).getScene()!.globe.translucency.enabled = true;
-      this.opacityWatcher = watch(
+      this._opacityWatcher = watch(
         this.opacity,
         this.applyOpacitySettings.bind(this),
       );
-      this.useOpacityByDistanceWatcher = watch(
+      this._useOpacityByDistanceWatcher = watch(
         this.useOpacityByDistance,
         this.applyOpacitySettings.bind(this),
       );
-      this.opacityByDistanceWatcher = watch(
+      this._opacityByDistanceWatcher = watch(
         this.opacityByDistance,
         this.applyOpacitySettings.bind(this),
       );
-      this.collisionWatcher = watch(this.collision, () => {
+      this._collisionWatcher = watch(this.collision, () => {
         (
           this.app.maps.activeMap as CesiumMap
         ).getScene()!.screenSpaceCameraController.enableCollisionDetection =
@@ -163,12 +164,12 @@ class GlobalTerrainMode extends TerrainMode {
   }
 
   deactivate(): void {
-    if (this.active) {
+    if (this._active) {
       super.deactivate();
-      this.opacityWatcher();
-      this.useOpacityByDistanceWatcher();
-      this.opacityByDistanceWatcher();
-      this.collisionWatcher();
+      this._opacityWatcher();
+      this._useOpacityByDistanceWatcher();
+      this._opacityByDistanceWatcher();
+      this._collisionWatcher();
       if (this.app.maps.activeMap instanceof CesiumMap) {
         this.app.maps.activeMap.getScene()!.globe.translucency.enabled = false;
       }

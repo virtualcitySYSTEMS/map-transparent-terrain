@@ -1,18 +1,17 @@
-import {
+import type {
   ToolboxSelectItem,
-  ToolboxType,
   VcsUiApp,
   WindowComponentOptions,
-  WindowSlot,
 } from '@vcmap/ui';
+import { ToolboxType, WindowSlot } from '@vcmap/ui';
 import { reactive, watch } from 'vue';
 import { CesiumMap } from '@vcmap/core';
-import { ToolboxSelectAction } from '@vcmap/ui/src/manager/toolbox/toolboxManager';
+import type { ToolboxSelectAction } from '@vcmap/ui/src/manager/toolbox/toolboxManager';
 import { name } from '../../package.json';
 import { TransparentTerrainType } from '../mode/terrainMode.js';
-import TransparentTerrainManager from '../transparentTerrainManager.js';
+import type TransparentTerrainManager from '../transparentTerrainManager.js';
 
-export const TransparentTerrainTypeIcon: Record<
+export const transparentTerrainTypeIcon: Record<
   TransparentTerrainType,
   string
 > = {
@@ -32,7 +31,7 @@ export function addToolButtons(
   ): ToolboxSelectItem => ({
     name: type,
     title: `transparentTerrain.create.tooltip.${type}`,
-    icon: TransparentTerrainTypeIcon[type],
+    icon: transparentTerrainTypeIcon[type],
   });
 
   const action: ToolboxSelectAction = reactive({
@@ -83,7 +82,7 @@ export function addToolButtons(
     action.active = !!currentMode;
     if (action.active) {
       const toolName = currentMode!.type;
-      const index = action.tools.findIndex((t) => t.name === toolName);
+      const index = action.tools.findIndex((t) => t.name === String(toolName));
       if (index >= 0 && action.currentIndex !== index) {
         action.currentIndex = index;
       }
@@ -113,7 +112,9 @@ export function addToolButtons(
 
   return (): void => {
     terrainModeListener();
-    listeners.forEach((cb) => cb());
+    listeners.forEach((cb) => {
+      cb();
+    });
     app.toolboxManager.remove(createId);
   };
 }

@@ -1,17 +1,17 @@
 import { CesiumMap, Extent, wgs84Projection } from '@vcmap/core';
 import { Rectangle } from '@vcmap-cesium/engine';
-import { Feature } from 'ol';
-import { VcsUiApp } from '@vcmap/ui';
+import type { Feature } from 'ol';
+import type { VcsUiApp } from '@vcmap/ui';
 import { TransparentTerrainType } from './terrainMode.js';
 import GlobalTerrainMode from './globalTerrainMode.js';
 
 class RectangleTerrainMode extends GlobalTerrainMode {
-  private extent?: Array<number>;
+  private _extent?: Array<number>;
 
   constructor(app: VcsUiApp) {
     super(app);
     this.type = TransparentTerrainType.Rectangle;
-    this.extent = undefined;
+    this._extent = undefined;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -20,12 +20,12 @@ class RectangleTerrainMode extends GlobalTerrainMode {
   }
 
   extentNotEqual(): boolean {
-    if (!this.extent) {
+    if (!this._extent) {
       return true;
     } else {
       return (
-        this.extent.length !== this.defaultExtent.length ||
-        !this.extent.every(
+        this._extent.length !== this.defaultExtent.length ||
+        !this._extent.every(
           (value, index) => value === this.defaultExtent[index],
         )
       );
@@ -33,22 +33,22 @@ class RectangleTerrainMode extends GlobalTerrainMode {
   }
 
   initialize(): void {
-    if (!this.initialized) {
+    if (!this._initialized) {
       super.initialize();
-      if (!this.extent) {
-        this.extent = this.defaultExtent;
+      if (!this._extent) {
+        this._extent = this.defaultExtent;
       }
     }
   }
 
   activate(): void {
-    if (!this.active) {
+    if (!this._active) {
       super.activate();
       if (this.extentNotEqual()) {
         (
           this.app.maps.activeMap as CesiumMap
         ).getScene()!.globe.translucency.rectangle = Rectangle.fromDegrees(
-          ...this.extent!,
+          ...this._extent!,
         );
       } else {
         (
@@ -61,7 +61,7 @@ class RectangleTerrainMode extends GlobalTerrainMode {
   getExtent(): Extent {
     return new Extent({
       projection: wgs84Projection.toJSON(),
-      coordinates: this.extent,
+      coordinates: this._extent,
     });
   }
 
@@ -74,28 +74,28 @@ class RectangleTerrainMode extends GlobalTerrainMode {
 
   updateExtent(extent: Extent): void {
     if (extent) {
-      this.extent = extent.extent;
+      this._extent = extent.extent;
       (
         this.app.maps.activeMap as CesiumMap
       ).getScene()!.globe.translucency.rectangle = Rectangle.fromDegrees(
-        ...this.extent,
+        ...this._extent,
       );
     }
   }
 
   serialize(): Feature {
     const feature = super.serialize();
-    feature.set('extent', this.extent);
+    feature.set('_extent', this._extent);
     return feature;
   }
 
   deserialize(feature: Feature): void {
     super.deserialize(feature);
-    this.extent = feature.get('extent');
+    this._extent = feature.get('_extent');
   }
 
   deactivate(): void {
-    if (this.active) {
+    if (this._active) {
       super.deactivate();
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

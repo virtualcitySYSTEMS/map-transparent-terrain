@@ -1,8 +1,10 @@
-import { ShallowRef, shallowRef } from 'vue';
-import { getDefaultProjection, Projection } from '@vcmap/core';
+import type { ShallowRef } from 'vue';
+import { shallowRef } from 'vue';
+import type { Projection } from '@vcmap/core';
+import { getDefaultProjection } from '@vcmap/core';
 import { Feature } from 'ol';
 import { Polygon } from 'ol/geom.js';
-import { VcsUiApp } from '@vcmap/ui';
+import type { VcsUiApp } from '@vcmap/ui';
 
 export enum TransparentTerrainType {
   Box = 'Box',
@@ -15,9 +17,9 @@ class TerrainMode {
 
   type?: TransparentTerrainType;
 
-  protected initialized: boolean;
+  protected _initialized: boolean;
 
-  protected active: boolean;
+  protected _active: boolean;
 
   readonly projection: Projection;
 
@@ -28,23 +30,23 @@ class TerrainMode {
   constructor(app: VcsUiApp) {
     this.app = app;
     this.type = undefined;
-    this.initialized = false;
-    this.active = false;
+    this._initialized = false;
+    this._active = false;
     this.name = shallowRef(undefined);
     this.isPersistent = shallowRef(false);
     this.projection = getDefaultProjection();
   }
 
   initialize(): void {
-    if (!this.initialized) {
-      this.initialized = true;
+    if (!this._initialized) {
+      this._initialized = true;
     }
   }
 
   activate(): void {
-    if (!this.active) {
+    if (!this._active) {
       this.initialize();
-      this.active = true;
+      this._active = true;
     }
   }
 
@@ -61,7 +63,7 @@ class TerrainMode {
   }
 
   deactivate(): void {
-    this.active = false;
+    this._active = false;
   }
 }
 export default TerrainMode;

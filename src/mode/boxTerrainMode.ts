@@ -13,20 +13,21 @@ import {
   Plane,
   Entity,
 } from '@vcmap-cesium/engine';
+import type { CesiumMap, DataSourceLayer } from '@vcmap/core';
 import {
   cartesianToMercator,
-  CesiumMap,
   ClippingObject,
-  DataSourceLayer,
   EventType,
   mercatorProjection,
   Projection,
   wgs84Projection,
 } from '@vcmap/core';
-import { Ref, ref } from 'vue';
-import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
-import { getPluginAssetUrl, VcsUiApp } from '@vcmap/ui';
+import type { Ref } from 'vue';
+import { ref } from 'vue';
+import type { Feature } from 'ol';
+import type { Coordinate } from 'ol/coordinate';
+import type { VcsUiApp } from '@vcmap/ui';
+import { getPluginAssetUrl } from '@vcmap/ui';
 import { name } from '../../package.json';
 import TransparentTerrainInteraction from '../interaction/transparentTerrainInteraction.js';
 import TerrainMode, { TransparentTerrainType } from './terrainMode.js';
@@ -34,11 +35,11 @@ import TerrainMode, { TransparentTerrainType } from './terrainMode.js';
 let modelMatrix = new Matrix4();
 
 class BoxTerrainMode extends TerrainMode {
-  private material?: ImageMaterialProperty;
+  private _material?: ImageMaterialProperty;
 
-  private clippingObject?: ClippingObject;
+  private _clippingObject?: ClippingObject;
 
-  private entities: Array<Entity>;
+  private _entities: Array<Entity>;
 
   layer?: DataSourceLayer;
 
@@ -51,29 +52,29 @@ class BoxTerrainMode extends TerrainMode {
   showTexture: boolean;
 
   // eslint-disable-next-line class-methods-use-this
-  private removeInteraction: () => void = () => {};
+  private _removeInteraction: () => void = () => {};
 
-  private readonly interaction: TransparentTerrainInteraction;
+  private readonly _interaction: TransparentTerrainInteraction;
 
   constructor(app: VcsUiApp) {
     super(app);
     this.type = TransparentTerrainType.Box;
-    this.material = undefined;
-    this.clippingObject = undefined;
-    this.entities = [];
+    this._material = undefined;
+    this._clippingObject = undefined;
+    this._entities = [];
     this.position = new Cartesian3();
     this.projectPosition = ref(new Cartesian3());
     this.boxSize = new Cartesian3(100, 100, 50);
     this.showTexture = true;
-    this.interaction = new TransparentTerrainInteraction(
+    this._interaction = new TransparentTerrainInteraction(
       this.translatePosition.bind(this),
     );
   }
 
   initialize(): void {
-    if (!this.initialized) {
+    if (!this._initialized) {
       super.initialize();
-      this.material = new ImageMaterialProperty({
+      this._material = new ImageMaterialProperty({
         image: getPluginAssetUrl(this.app, name, 'plugin-assets/dirt_0.png')!,
         repeat: new Cartesian2(
           Math.ceil(this.boxSize.x / 20),
@@ -84,10 +85,10 @@ class BoxTerrainMode extends TerrainMode {
   }
 
   activate(): void {
-    if (!this.active) {
+    if (!this._active) {
       super.activate();
-      if (!this.clippingObject) {
-        this.clippingObject = new ClippingObject({ terrain: true });
+      if (!this._clippingObject) {
+        this._clippingObject = new ClippingObject({ terrain: true });
       }
       if (this.position.equals(new Cartesian3())) {
         const cartographic = (this.app.maps.activeMap as CesiumMap)
@@ -103,12 +104,12 @@ class BoxTerrainMode extends TerrainMode {
       this.projectPosition.value = this.getProjectPosition();
       this.initClippingPlanes();
       const { eventHandler } = this.app.maps;
-      this.removeInteraction = eventHandler.addExclusiveInteraction(
-        this.interaction,
+      this._removeInteraction = eventHandler.addExclusiveInteraction(
+        this._interaction,
         () => {},
       );
       this.app.maps.clippingObjectManager.setExclusiveClippingObjects(
-        [this.clippingObject],
+        [this._clippingObject],
         () => {
           this.deactivate();
         },
@@ -131,7 +132,7 @@ class BoxTerrainMode extends TerrainMode {
         dimensions: new CallbackProperty(() => {
           return new Cartesian2(this.boxSize.x, this.boxSize.y);
         }, false),
-        material: this.material,
+        material: this._material,
       },
     });
     const wall1 = new Entity({
@@ -148,7 +149,7 @@ class BoxTerrainMode extends TerrainMode {
         dimensions: new CallbackProperty(() => {
           return new Cartesian2(this.boxSize.x, this.boxSize.z);
         }, false),
-        material: this.material,
+        material: this._material,
       },
     });
     const wall2 = new Entity({
@@ -165,7 +166,7 @@ class BoxTerrainMode extends TerrainMode {
         dimensions: new CallbackProperty(() => {
           return new Cartesian2(this.boxSize.x, this.boxSize.z);
         }, false),
-        material: this.material,
+        material: this._material,
       },
     });
     const wall3 = new Entity({
@@ -182,7 +183,7 @@ class BoxTerrainMode extends TerrainMode {
         dimensions: new CallbackProperty(() => {
           return new Cartesian2(this.boxSize.y, this.boxSize.z);
         }, false),
-        material: this.material,
+        material: this._material,
       },
     });
     const wall4 = new Entity({
@@ -199,17 +200,17 @@ class BoxTerrainMode extends TerrainMode {
         dimensions: new CallbackProperty(() => {
           return new Cartesian2(this.boxSize.y, this.boxSize.z);
         }, false),
-        material: this.material,
+        material: this._material,
       },
     });
-    this.entities = [bottom, wall1, wall2, wall3, wall4];
-    this.entities.forEach((entity) => this.layer?.addEntity(entity));
+    this._entities = [bottom, wall1, wall2, wall3, wall4];
+    this._entities.forEach((entity) => this.layer?.addEntity(entity));
     modelMatrix = bottom.computeModelMatrix(JulianDate.now());
     this.updateClippingPlaner();
   }
 
   updateClippingPlaner(): void {
-    this.entities.forEach((entity) => {
+    this._entities.forEach((entity) => {
       // eslint-disable-next-line
       // @ts-ignore
       entity.plane.material.color = this.showTexture
@@ -219,19 +220,21 @@ class BoxTerrainMode extends TerrainMode {
     const dimX = this.boxSize.x / 2.0;
     const dimY = this.boxSize.y / 2.0;
     const dimZ = Math.abs(this.boxSize.z);
-    this.clippingObject!.clippingPlaneCollection = new ClippingPlaneCollection({
-      modelMatrix,
-      planes: [
-        new ClippingPlane(new Cartesian3(1.0, 0.0, 0.0), -dimX),
-        new ClippingPlane(new Cartesian3(-1.0, 0.0, 0.0), -dimX),
-        new ClippingPlane(new Cartesian3(0.0, 1.0, 0.0), -dimY),
-        new ClippingPlane(new Cartesian3(0.0, -1.0, 0.0), -dimY),
-        new ClippingPlane(new Cartesian3(0.0, 0.0, -1.0), -dimZ),
-      ],
-      edgeWidth: 1.0,
-      edgeColor: Color.WHITE,
-      enabled: true,
-    });
+    this._clippingObject!.clippingPlaneCollection = new ClippingPlaneCollection(
+      {
+        modelMatrix,
+        planes: [
+          new ClippingPlane(new Cartesian3(1.0, 0.0, 0.0), -dimX),
+          new ClippingPlane(new Cartesian3(-1.0, 0.0, 0.0), -dimX),
+          new ClippingPlane(new Cartesian3(0.0, 1.0, 0.0), -dimY),
+          new ClippingPlane(new Cartesian3(0.0, -1.0, 0.0), -dimY),
+          new ClippingPlane(new Cartesian3(0.0, 0.0, -1.0), -dimZ),
+        ],
+        edgeWidth: 1.0,
+        edgeColor: Color.WHITE,
+        enabled: true,
+      },
+    );
   }
 
   updateBox(
@@ -296,19 +299,19 @@ class BoxTerrainMode extends TerrainMode {
     this.position = Cartesian3.fromArray(feature.get('position'));
     this.boxSize = Cartesian3.fromArray(feature.get('boxSize'));
     this.showTexture = !!feature.get('showTexture');
-    this.interaction.paused = true;
-    this.interaction.setActive(EventType.CLICK);
+    this._interaction.paused = true;
+    this._interaction.setActive(EventType.CLICK);
   }
 
   deactivate(): void {
-    if (this.active) {
+    if (this._active) {
       super.deactivate();
-      this.removeInteraction();
-      this.entities.forEach((entity) =>
+      this._removeInteraction();
+      this._entities.forEach((entity) =>
         this.layer?.removeEntityById(entity.id),
       );
       this.app.maps.clippingObjectManager.clearExclusiveClippingObjects(true);
-      this.clippingObject = undefined;
+      this._clippingObject = undefined;
     }
   }
 }

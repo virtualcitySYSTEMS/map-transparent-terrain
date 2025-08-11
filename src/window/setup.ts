@@ -1,24 +1,26 @@
 import { watch } from 'vue';
-import {
+import type {
   CollectionComponentClass,
+  VcsUiApp,
+  WindowComponentOptions,
+  WindowState,
+} from '@vcmap/ui';
+import {
   createListExportAction,
   createListImportAction,
   makeEditorCollectionComponentClass,
-  VcsUiApp,
-  WindowComponentOptions,
   WindowSlot,
-  WindowState,
 } from '@vcmap/ui';
-import { Category } from '@vcmap/core';
+import type { Category } from '@vcmap/core';
 import { name } from '../../package.json';
 import terrainWindow from './TerrainWindow.vue';
-import { TransparentTerrainTypeIcon } from '../util/toolbox.js';
+import { transparentTerrainTypeIcon } from '../util/toolbox.js';
 import {
   createExportCallback,
   createImportCallback,
 } from '../util/actionHelper.js';
-import TransparentTerrainManager from '../transparentTerrainManager.js';
-import { TransparentTerrainItem } from '../category/transparentTerrainCategory.js';
+import type TransparentTerrainManager from '../transparentTerrainManager.js';
+import type { TransparentTerrainItem } from '../category/transparentTerrainCategory.js';
 
 export default function setupTerrainWindow(
   app: VcsUiApp,
@@ -70,7 +72,9 @@ export default function setupTerrainWindow(
   const { action: exportAction, destroy: destroyExportAction } =
     createListExportAction(
       collectionComponent.selection,
-      () => createExportCallback(collectionComponent),
+      () => {
+        createExportCallback(collectionComponent);
+      },
       name,
     );
 
@@ -87,7 +91,7 @@ export default function setupTerrainWindow(
       state.headerTitle = currentMode.name.value
         ? currentMode.name.value
         : `transparentTerrain.create.title.${currentMode.type}`;
-      state.headerIcon = TransparentTerrainTypeIcon[currentMode.type!];
+      state.headerIcon = transparentTerrainTypeIcon[currentMode.type!];
     }
   }
 

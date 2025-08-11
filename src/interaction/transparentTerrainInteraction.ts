@@ -1,14 +1,15 @@
-import { AbstractInteraction, EventType, InteractionEvent } from '@vcmap/core';
-import { Coordinate } from 'ol/coordinate';
+import type { InteractionEvent } from '@vcmap/core';
+import { AbstractInteraction, EventType } from '@vcmap/core';
+import type { Coordinate } from 'ol/coordinate';
 
 class TransparentTerrainInteraction extends AbstractInteraction {
-  private readonly cb: (position: Coordinate) => void;
+  private readonly _cb: (position: Coordinate) => void;
 
   paused: boolean;
 
   constructor(cb: (position: Coordinate) => void) {
     super(EventType.CLICKMOVE);
-    this.cb = cb;
+    this._cb = cb;
     this.paused = false;
     this.setActive();
   }
@@ -16,7 +17,7 @@ class TransparentTerrainInteraction extends AbstractInteraction {
   pipe(event: InteractionEvent): Promise<InteractionEvent> {
     if (event.type & EventType.MOVE) {
       if (event.position && !event.position.every((val) => val === 0)) {
-        this.cb(event.position);
+        this._cb(event.position);
       }
     } else if (event.type & EventType.CLICK) {
       if (!this.paused) {

@@ -1,33 +1,35 @@
-import { ShallowRef, shallowRef } from 'vue';
+import type { ShallowRef } from 'vue';
+import { shallowRef } from 'vue';
 import { DataSourceLayer, markVolatile } from '@vcmap/core';
 
-import { Feature } from 'ol';
-import { VcsUiApp } from '@vcmap/ui';
+import type { Feature } from 'ol';
+import type { VcsUiApp } from '@vcmap/ui';
 import GlobalTerrainMode from './mode/globalTerrainMode.js';
 import RectangleTerrainMode from './mode/rectangleTerrainMode.js';
-import TerrainMode, { TransparentTerrainType } from './mode/terrainMode.js';
+import type TerrainMode from './mode/terrainMode.js';
+import { TransparentTerrainType } from './mode/terrainMode.js';
 import BoxTerrainMode from './mode/boxTerrainMode.js';
 
 class TransparentTerrainManager {
   readonly app: VcsUiApp;
 
-  private boxLayer?: DataSourceLayer;
+  private _boxLayer?: DataSourceLayer;
 
   currentMode: ShallowRef<TerrainMode | undefined>;
 
   constructor(app: VcsUiApp) {
     this.app = app;
-    this.boxLayer = undefined;
+    this._boxLayer = undefined;
     this.currentMode = shallowRef(undefined);
   }
 
   initializeBoxLayer(): void {
-    this.boxLayer = new DataSourceLayer({
+    this._boxLayer = new DataSourceLayer({
       name: '_boxTransparentTerrainLayer',
     });
-    markVolatile(this.boxLayer);
-    this.app.layers.add(this.boxLayer);
-    this.boxLayer.activate().catch(() => {});
+    markVolatile(this._boxLayer);
+    this.app.layers.add(this._boxLayer);
+    this._boxLayer.activate().catch(() => {});
   }
 
   start(mode: TerrainMode | undefined): void {
@@ -54,11 +56,11 @@ class TransparentTerrainManager {
     let terrainMode;
 
     if (type === TransparentTerrainType.Box) {
-      if (!this.boxLayer) {
+      if (!this._boxLayer) {
         this.initializeBoxLayer();
       }
       terrainMode = new BoxTerrainMode(this.app);
-      terrainMode.layer = this.boxLayer;
+      terrainMode.layer = this._boxLayer;
     } else if (type === TransparentTerrainType.Global) {
       terrainMode = new GlobalTerrainMode(this.app);
     } else if (type === TransparentTerrainType.Rectangle) {

@@ -1,19 +1,14 @@
-import {
-  Category,
-  CesiumMap,
-  Extent,
-  ExtentOptions,
-  Viewpoint,
-} from '@vcmap/core';
-import {
+import type { ExtentOptions } from '@vcmap/core';
+import { Category, CesiumMap, Extent, Viewpoint } from '@vcmap/core';
+import type {
   CollectionComponentClass,
   CollectionComponentListItem,
-  createSupportedMapMappingFunction,
   VcsUiApp,
 } from '@vcmap/ui';
+import { createSupportedMapMappingFunction } from '@vcmap/ui';
 import { isEmpty } from 'ol/extent';
 import { name as packageName } from '../../package.json';
-import TerrainMode from '../mode/terrainMode.js';
+import type TerrainMode from '../mode/terrainMode.js';
 import BoxTerrainMode from '../mode/boxTerrainMode.js';
 import RectangleTerrainMode from '../mode/rectangleTerrainMode.js';
 
@@ -134,8 +129,9 @@ export async function createCategory(vcsApp: VcsUiApp): Promise<{
     () => {
       return true;
     },
-    (item, c, categoryListItem) =>
-      itemMappingFunction(item, c, categoryListItem, vcsApp),
+    (item, c, categoryListItem) => {
+      itemMappingFunction(item, c, categoryListItem, vcsApp);
+    },
     packageName,
     [category.name],
   );

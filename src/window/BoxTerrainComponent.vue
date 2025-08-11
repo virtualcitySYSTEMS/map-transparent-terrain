@@ -9,30 +9,30 @@
     <v-row no-gutters>
       <v-col class="py-0 px-1">
         <VcsTextField
+          v-model.number="localBoxSize.x"
           type="number"
           step="10"
           :prefix="$t('transparentTerrain.settings.length')"
-          v-model.number="localBoxSize.x"
           hide-spin-buttons
           unit="m"
         />
       </v-col>
       <v-col class="py-0 px-1">
         <VcsTextField
+          v-model.number="localBoxSize.y"
           type="number"
           step="10"
           :prefix="$t('transparentTerrain.settings.width')"
-          v-model.number="localBoxSize.y"
           hide-spin-buttons
           unit="m"
         />
       </v-col>
       <v-col class="py-0 px-1">
         <VcsTextField
+          v-model.number="localBoxSize.z"
           type="number"
           step="10"
           :prefix="$t('transparentTerrain.settings.depth')"
-          v-model.number="localBoxSize.z"
           hide-spin-buttons
           unit="m"
         />
@@ -47,21 +47,21 @@
     <v-row no-gutters>
       <v-col class="py-0 px-1">
         <VcsTextField
+          v-model.number="boxPosition.x"
           type="number"
           step="10"
           prefix="X"
           :decimals="2"
-          v-model.number="boxPosition.x"
           unit="m"
         />
       </v-col>
       <v-col class="py-0 px-1">
         <VcsTextField
+          v-model.number="boxPosition.y"
           type="number"
           step="10"
           prefix="Y"
           :decimals="2"
-          v-model.number="boxPosition.y"
           unit="m"
         />
       </v-col>
@@ -80,8 +80,8 @@
   import { VRow, VCol, VSheet, VDivider, VSwitch } from 'vuetify/components';
   import { defineComponent, inject, reactive, shallowRef, watch } from 'vue';
   import { Cartesian3 } from '@vcmap-cesium/engine';
-  import TransparentTerrainManager from '../transparentTerrainManager.js';
-  import BoxTerrainMode from '../mode/boxTerrainMode.js';
+  import type TransparentTerrainManager from '../transparentTerrainManager.js';
+  import type BoxTerrainMode from '../mode/boxTerrainMode.js';
 
   export default defineComponent({
     name: 'BoxTerrainComponent',

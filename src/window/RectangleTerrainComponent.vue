@@ -1,15 +1,15 @@
 <template>
   <v-sheet class="hide-scrollbar">
     <VcsHelp
+      v-if="createExtent.active"
       text="transparentTerrain.settings.rectangle.hint"
       :show="true"
-      v-if="createExtent.active"
     />
     <VcsFormSection
+      v-else
       heading="transparentTerrain.settings.modify"
       :header-actions="actions"
       :action-button-list-overflow-count="5"
-      v-else
     />
     <VcsExtent v-model="localExtent" />
     <v-divider class="mt-2" />
@@ -17,6 +17,7 @@
   </v-sheet>
 </template>
 <script lang="ts">
+  import type { VcsAction } from '@vcmap/ui';
   import {
     VcsFormSection,
     VcsExtent,
@@ -34,10 +35,11 @@
     ref,
     watch,
   } from 'vue';
-  import { Extent, VectorStyleItem } from '@vcmap/core';
+  import type { VectorStyleItem } from '@vcmap/core';
+  import { Extent } from '@vcmap/core';
   import GlobalTerrainComponent from './GlobalTerrainComponent.vue';
-  import TransparentTerrainManager from '../transparentTerrainManager.js';
-  import RectangleTerrainMode from '../mode/rectangleTerrainMode.js';
+  import type TransparentTerrainManager from '../transparentTerrainManager.js';
+  import type RectangleTerrainMode from '../mode/rectangleTerrainMode.js';
 
   export default defineComponent({
     name: 'RectangleTerrainComponent',
@@ -80,17 +82,15 @@
         layer,
       } = setupExtentComponentActions(manager.app, extent);
 
-      const createExtent = ref(createExtentAction);
+      const createExtent = ref<VcsAction>(createExtentAction);
 
       (layer.style as VectorStyleItem).fillColor = [255, 255, 255, 0];
 
       if (extent.value.isValid()) {
-        layer.activate().catch((err) => {
+        layer.activate().catch((e: unknown) => {
           manager.app.notifier.add({
             type: NotificationType.ERROR,
-            message: `Failed to activate extent layer: ${
-              (err as Error).message
-            }`,
+            message: `Failed to activate extent layer: ${(e as Error).message}`,
           });
         });
       }
@@ -99,7 +99,7 @@
         if (!isPersistent.value) {
           // eslint-disable-next-line
           // @ts-ignore
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-floating-promises
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           createExtent.value.callback();
         }
       });

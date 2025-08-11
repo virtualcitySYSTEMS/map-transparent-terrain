@@ -18,9 +18,9 @@
     </v-row>
     <v-row no-gutters class="py-0 px-1">
       <vcs-slider
+        v-model.number="opacity"
         type="number"
         step="1"
-        v-model.number="opacity"
         :disabled="useOpacityByDistance"
       />
     </v-row>
@@ -42,9 +42,9 @@
         </v-col>
         <v-col class="d-flex justify-end">
           <VcsTextField
+            v-model.number="opacityByDistance.near"
             type="number"
             :disabled="!useOpacityByDistance"
-            v-model.number="opacityByDistance.near"
             hide-spin-buttons
             unit="m"
           />
@@ -64,9 +64,9 @@
       </v-row>
       <v-row no-gutters class="py-0 px-1">
         <vcs-slider
+          v-model.number="opacityByDistance.nearValue"
           type="number"
           step="1"
-          v-model.number="opacityByDistance.nearValue"
           :disabled="!useOpacityByDistance"
         />
       </v-row>
@@ -78,9 +78,9 @@
         </v-col>
         <v-col class="d-flex justify-end">
           <VcsTextField
+            v-model.number="opacityByDistance.far"
             type="number"
             :disabled="!useOpacityByDistance"
-            v-model.number="opacityByDistance.far"
             hide-spin-buttons
             unit="m"
           />
@@ -100,9 +100,9 @@
       </v-row>
       <v-row no-gutters class="py-0 px-1">
         <vcs-slider
+          v-model.number="opacityByDistance.farValue"
           type="number"
           step="1"
-          v-model.number="opacityByDistance.farValue"
           :disabled="!useOpacityByDistance"
         />
       </v-row>
@@ -119,8 +119,8 @@
   } from '@vcmap/ui';
   import { VRow, VCol, VSheet, VSwitch } from 'vuetify/components';
   import { computed, defineComponent, inject } from 'vue';
-  import TransparentTerrainManager from '../transparentTerrainManager.js';
-  import GlobalTerrainMode from '../mode/globalTerrainMode.js';
+  import type TransparentTerrainManager from '../transparentTerrainManager.js';
+  import type GlobalTerrainMode from '../mode/globalTerrainMode.js';
 
   export default defineComponent({
     name: 'GlobalTerrainComponent',
