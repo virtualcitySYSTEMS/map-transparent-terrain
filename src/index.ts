@@ -61,9 +61,7 @@ export default function transparentTerrainPlugin(): VcsPlugin<
             title: 'Transparent Terrain',
           },
           create: {
-            new: 'New',
             tooltip: {
-              addToWorkspace: 'Add to My Workspace',
               [TransparentTerrainType.Box]: 'Create ground excavation area',
               [TransparentTerrainType.Rectangle]:
                 'Create transparent rectangle',
@@ -117,9 +115,7 @@ export default function transparentTerrainPlugin(): VcsPlugin<
             title: 'Transparenter Geländemodus',
           },
           create: {
-            new: 'Neu',
             tooltip: {
-              addToWorkspace: 'In Mein Arbeitsbereich hinzufügen',
               [TransparentTerrainType.Box]: 'Geländeaushub erstellen',
               [TransparentTerrainType.Rectangle]:
                 'Transparentes Rechteck erstellen',

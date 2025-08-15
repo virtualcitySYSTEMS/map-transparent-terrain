@@ -49,15 +49,8 @@ export function createExportCallback(
     collectionComponent.collection.getByKey(s.name)!.mode.serialize(),
   );
   const text = writeGeoJSON(
-    {
-      features,
-    },
-    {
-      writeStyle: true,
-      embedIcons: true,
-      prettyPrint: true,
-      writeId: true,
-    },
+    { features },
+    { writeStyle: true, embedIcons: true, prettyPrint: true, writeId: true },
   );
-  downloadText(text, 'transparenttransparentTerrain.json');
+  downloadText(text, 'transparentTerrain.json');
 }

@@ -1,5 +1,5 @@
 default:
-  image: gitlab.virtualcitysystems.de:5050/vcsuite/devops/gitlabrunner/node:18-bullseye
+  image: gitlab.virtualcitysystems.de:5050/vcsuite/devops/gitlabrunner/node:20-bullseye
 
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG
@@ -9,6 +9,7 @@ stages:
   - test
   - bundle
   - deploy
+  - prepublish
   - version
   - publish
   - deployCluster
@@ -23,6 +24,7 @@ build:
   <<: *job_definition
   script:
     - npm ci
+    - npm run ensure-types
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
@@ -57,6 +59,16 @@ type-check:
   script:
     - npm run type-check
 
+test:
+  <<: *after_build_definition
+  stage: test
+  script:
+    - npm run coverage -- --reporter junit --outputFile test-report.xml
+  coverage: '/^Statements\s*:\s*([^%]+)/'
+  artifacts:
+    reports:
+      junit: test-report.xml
+
 audit:
   <<: *after_build_definition
   stage: test
@@ -68,6 +80,15 @@ buildPreview:
   stage: bundle
   script:
     - npm run buildStagingApp
+  before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_RUNNER_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan gitlab.virtualcitysystems.de >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - git config user.name "Gitlab Runner"
+    - git config user.email "gitlab-runner@vc.systems"
 
 bundle:
   <<: *after_build_definition
@@ -130,6 +151,24 @@ deployStagingCluster:
   trigger:
     project: vcsuite/devops/manifests
     branch: main
+
+sshDependenciesCheck:
+  <<: *after_build_definition
+  stage: prepublish
+  only:
+    variables:
+      - $PUBLISH
+    refs:
+      - /^(main|release-v.*)$/
+  script:
+    - echo "Checking for SSH dependencies in package.json..."
+    - |
+      if grep -E "git(\+ssh)?://git@gitlab|ssh://git@gitlab:|gitlab:" package.json; then
+        echo "Error: SSH link dependencies found in package.json."
+        exit 1
+      else
+        echo "No SSH link dependencies found."
+      fi
 
 version:
   <<: *after_build_definition

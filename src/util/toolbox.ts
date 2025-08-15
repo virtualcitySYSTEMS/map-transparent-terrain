@@ -3,7 +3,7 @@ import type {
   VcsUiApp,
   WindowComponentOptions,
 } from '@vcmap/ui';
-import { ToolboxType, WindowSlot } from '@vcmap/ui';
+import { categoryManagerWindowId, ToolboxType, WindowSlot } from '@vcmap/ui';
 import { reactive, watch } from 'vue';
 import { CesiumMap } from '@vcmap/core';
 import type { ToolboxSelectAction } from '@vcmap/ui/src/manager/toolbox/toolboxManager';
@@ -46,7 +46,7 @@ export function addToolButtons(
             {
               ...editor,
               id: windowId,
-              parentId: 'category-manager',
+              parentId: categoryManagerWindowId,
               slot: WindowSlot.DYNAMIC_CHILD,
             },
             name,

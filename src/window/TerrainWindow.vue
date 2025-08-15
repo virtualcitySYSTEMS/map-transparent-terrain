@@ -1,30 +1,19 @@
 <template>
-  <v-sheet class="hide-scrollbar">
+  <VcsWorkspaceWrapper
+    :disable-add="isPersistent"
+    :disable-new="terrainType === types.Global"
+    @add-clicked="addToCategory"
+    @new-clicked="createNew"
+  >
     <GlobalTerrainComponent v-if="terrainType === types.Global" />
     <RectangleTerrainComponent v-if="terrainType === types.Rectangle" />
     <BoxTerrainComponent v-if="terrainType === types.Box" />
-    <v-divider class="mt-3" />
-    <div class="d-flex w-100 justify-space-between px-2 pt-2 pb-1">
-      <VcsFormButton
-        icon="$vcsComponentsPlus"
-        :disabled="isPersistent"
-        :tooltip="'transparentTerrain.create.tooltip.addToWorkspace'"
-        @click="addToCategory"
-      />
-      <VcsFormButton
-        variant="filled"
-        :disabled="terrainType === types.Global"
-        @click="createNew"
-        >{{ $t('transparentTerrain.create.new') }}</VcsFormButton
-      >
-    </div>
-  </v-sheet>
+  </VcsWorkspaceWrapper>
 </template>
 
 <script lang="ts">
   import type { CollectionComponentClass, WindowState } from '@vcmap/ui';
-  import { VcsFormButton } from '@vcmap/ui';
-  import { VSheet, VDivider } from 'vuetify/components';
+  import { VcsWorkspaceWrapper } from '@vcmap/ui';
   import { inject, computed, defineComponent, watch } from 'vue';
   import type { Category } from '@vcmap/core';
   import GlobalTerrainComponent from './GlobalTerrainComponent.vue';
@@ -39,16 +28,13 @@
     name: 'TerrainWindow',
     components: {
       BoxTerrainComponent,
-      VDivider,
       RectangleTerrainComponent,
       GlobalTerrainComponent,
-      VSheet,
-      VcsFormButton,
+      VcsWorkspaceWrapper,
     },
     props: {
       itemName: {
         type: String,
-        required: false,
         default: undefined,
       },
     },

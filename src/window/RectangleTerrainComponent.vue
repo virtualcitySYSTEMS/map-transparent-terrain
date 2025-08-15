@@ -24,6 +24,7 @@
     setupExtentComponentActions,
     NotificationType,
     VcsHelp,
+    callSafeAction,
   } from '@vcmap/ui';
   import { VSheet, VDivider } from 'vuetify/components';
   import {
@@ -97,10 +98,7 @@
 
       onMounted(() => {
         if (!isPersistent.value) {
-          // eslint-disable-next-line
-          // @ts-ignore
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          createExtent.value.callback();
+          callSafeAction(createExtent.value);
         }
       });
 

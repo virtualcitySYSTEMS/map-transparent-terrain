@@ -6,6 +6,7 @@ import type {
   WindowState,
 } from '@vcmap/ui';
 import {
+  categoryManagerWindowId,
   createListExportAction,
   createListImportAction,
   makeEditorCollectionComponentClass,
@@ -13,7 +14,7 @@ import {
 } from '@vcmap/ui';
 import type { Category } from '@vcmap/core';
 import { name } from '../../package.json';
-import terrainWindow from './TerrainWindow.vue';
+import TerrainWindow from './TerrainWindow.vue';
 import { transparentTerrainTypeIcon } from '../util/toolbox.js';
 import {
   createExportCallback,
@@ -39,12 +40,8 @@ export default function setupTerrainWindow(
   };
 
   const editor: WindowComponentOptions = {
-    component: terrainWindow,
-    provides: {
-      manager,
-      category,
-      collectionComponent,
-    },
+    component: TerrainWindow,
+    provides: { manager, category, collectionComponent },
     state,
   };
 
@@ -66,7 +63,7 @@ export default function setupTerrainWindow(
       (files) => createImportCallback(app, manager, category, files),
       app.windowManager,
       name,
-      'category-manager',
+      categoryManagerWindowId,
     );
 
   const { action: exportAction, destroy: destroyExportAction } =
@@ -108,7 +105,7 @@ export default function setupTerrainWindow(
             {
               ...editor,
               id: windowId,
-              parentId: 'category-manager',
+              parentId: categoryManagerWindowId,
               slot: WindowSlot.DYNAMIC_CHILD,
             },
             name,
